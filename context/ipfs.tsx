@@ -6,9 +6,9 @@ import React, {
   ReactNode,
 } from 'react'
 import type { IPFS } from 'ipfs-core-types'
-import type { IDResult } from 'ipfs-core-types/root'
+import { IDResult } from 'ipfs-core-types/src/root'
 import styles from '../styles/Peers.module.css'
-import { multiaddr, Multiaddr } from '@multiformats/multiaddr'
+import { multiaddr } from '@multiformats/multiaddr'
 
 import { create } from 'ipfs-core'
 import { WebSockets } from '@libp2p/websockets'
@@ -33,7 +33,7 @@ export function AppWrapper({ children }: WrapperProps) {
   const [id, setId] = useState<IDResult>()
   const [ipfs, setIpfs] = useState<IPFS>()
 
-  useEffect(() => {
+useEffect(() => {
     const init = async () => {
       if (ipfs) return
 
@@ -49,7 +49,7 @@ export function AppWrapper({ children }: WrapperProps) {
           Addresses: {
             Delegates: [],
             Swarm: [
-              `/dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`,
+              // `/dns/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`,
             ],
           },
           Pubsub: {
@@ -75,6 +75,9 @@ export function AppWrapper({ children }: WrapperProps) {
 
       const nodeId = await node.id()
 
+      const addr = multiaddr(`/dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`)
+      await node.swarm.connect(addr)
+
       // @ts-ignore
       window.ipfs = node
 
@@ -82,7 +85,7 @@ export function AppWrapper({ children }: WrapperProps) {
     }
 
     init()
-  }, [])
+  }, [ipfs])
 
   if (!ipfs) {
     return (

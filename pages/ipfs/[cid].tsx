@@ -5,6 +5,7 @@ import Link from 'next/link'
 import toBuffer from 'it-to-buffer'
 
 import { useIPFSContext } from '../../context/ipfs'
+import Image from 'next/image'
 
 const CID: NextPage = () => {
   const router = useRouter()
@@ -56,7 +57,7 @@ const CID: NextPage = () => {
           </a>
         </Link>
       </div>
-      <img src={image} />
+      <Image src={image} alt="image" />
     </div>
   )
 }

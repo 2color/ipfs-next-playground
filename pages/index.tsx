@@ -42,7 +42,7 @@ const Home: NextPage = () => {
           <Link href="/peers">
             <a className={styles.card}>
               <h2>Peers &rarr;</h2>
-              <p>See the current IPFS node's peers </p>
+              <p>See the current IPFS node&apos;s peers </p>
             </a>
           </Link>
 

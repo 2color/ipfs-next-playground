@@ -16,7 +16,7 @@ const IPNS: NextPage = () => {
   // https://ipfs.io/ipfs/bafybeicklkqcnlvtiscr2hzkubjwnwjinvskffn4xorqeduft3wq7vm5u4
   useEffect(() => {
     getState()
-  }, [id])
+  }, [id, getState])
 
   // /ipns/k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8
 
@@ -28,11 +28,3 @@ const IPNS: NextPage = () => {
 }
 
 export default IPNS
-
-// min-height: 100vh;
-// /* padding: 4rem 0; */
-// flex: 1;
-// display: flex;
-// flex-direction: column;
-// justify-content: center;
-// align-items: center;
