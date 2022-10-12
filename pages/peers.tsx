@@ -17,7 +17,7 @@ const Peers: NextPage = () => {
 
   useEffect(() => {
     getPeers()
-  }, [id])
+  }, [id, getPeers])
 
   if (peers?.length === 0) {
     return <>'No peers'</>

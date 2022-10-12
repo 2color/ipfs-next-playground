@@ -36,7 +36,7 @@ const Upload: NextPage = () => {
     } catch (error) {
       console.log('Error uploading file: ', error)
     }
-  }, [file, setCid, setLoading])
+  }, [file, setCid, setLoading, ipfs])
 
   const handleCancel = () => {
     // setSelectedFile('')
@@ -92,7 +92,7 @@ const Upload: NextPage = () => {
           </div>
         )}
       </div>
-      <style jsx>{`
+      <style>{`
         .container {
           padding: 1rem;
           display: flex;
