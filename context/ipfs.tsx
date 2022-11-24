@@ -76,13 +76,11 @@ export function AppWrapper({ children }: WrapperProps) {
         const nodeId = await node.id()
 
         // 👇 fails on first byte:
-        // libp2p:dialer:error dial to /dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS failed +0ms Error: stream ended before 1 bytes became available
-        const addr = multiaddr(`/dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`)
+        // libp2p:dialer:error dial to /dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWAp58z5DeiQSVUXdeqgyLjvkcxgph9Pn2xZ9D1yWzHPCV failed +0ms Error: stream ended before 1 bytes became available
+        // const addr = multiaddr(`/dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWAp58z5DeiQSVUXdeqgyLjvkcxgph9Pn2xZ9D1yWzHPCV`)
 
         // 👇
-        // const addr = multiaddr(
-          // `/ip4/168.220.93.39/udp/4003/quic/webtransport/certhash/uEiD-3ARyU0rj69dpv3bc7qxe3Df6A3fdanAvgEgJ3nXZpQ/certhash/uEiCPruwEkBZAeoB3nUnclF-7BWxcc3A3HvIuk0y59MZRmg/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`,
-        // )
+        const addr = multiaddr(`/ip4/168.220.93.39/udp/4003/quic/webtransport/certhash/uEiBYCfrOOzbaE7TlUFJ-4fCpWArzaCWr5DPutnOk7kNxOA/certhash/uEiAAJDKUhVQslO54iSO9niS1X_Y0VHxpV35UMJHk_UCIPg/p2p/12D3KooWAp58z5DeiQSVUXdeqgyLjvkcxgph9Pn2xZ9D1yWzHPCV`)
 
 
 
