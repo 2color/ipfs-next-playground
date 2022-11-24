@@ -11,9 +11,9 @@ import styles from '../styles/Peers.module.css'
 import { multiaddr } from '@multiformats/multiaddr'
 
 import { create } from 'ipfs-core'
-import { WebSockets } from '@libp2p/websockets'
+import { webSockets } from '@libp2p/websockets'
+import { webTransport } from '@libp2p/webtransport'
 import { all, dnsWsOrWss } from '@libp2p/websockets/filters'
-import { PeerId } from 'ipfs-core/dist/src/components/ipns'
 
 interface IPFSContextInterface {
   ipfs: IPFS
@@ -33,55 +33,65 @@ export function AppWrapper({ children }: WrapperProps) {
   const [id, setId] = useState<IDResult>()
   const [ipfs, setIpfs] = useState<IPFS>()
 
-useEffect(() => {
+  useEffect(() => {
     const init = async () => {
       if (ipfs) return
 
       localStorage.debug = 'ipfs:*,libp2p*,-*:trace'
 
-      // debugger
-      const node = await create({
-        EXPERIMENTAL: {
-          ipnsPubsub: true,
-        },
-        config: {
-          Bootstrap: [],
-          Addresses: {
-            Delegates: [],
-            Swarm: [
-              // `/dns/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`,
+      try {
+        // debugger
+        const node = await create({
+          EXPERIMENTAL: {
+            ipnsPubsub: true,
+          },
+          config: {
+            Bootstrap: [],
+            Addresses: {
+              Delegates: [],
+              Swarm: [],
+            },
+          },
+          libp2p: {
+            transports: [
+              // This should only be enabled in local development!
+              // In a production environment the default filter should be used
+              // where only DNS + WSS addresses will be dialed by websockets in the browser.
+              webSockets({
+                filter: dnsWsOrWss,
+              }),
+              webTransport(),
             ],
+            connectionManager: {
+              autoDial: false,
+            },
           },
-          Pubsub: {
-            Enabled: true,
-            PubSubRouter: 'gossipsub',
-          },
-        },
-        libp2p: {
-          transports: [
-            // This should only be enabled in local development!
-            // In a production environment the default filter should be used
-            // where only DNS + WSS addresses will be dialed by websockets in the browser.
-            new WebSockets({
-              filter: dnsWsOrWss,
-            }),
-          ],
-          connectionManager: {
-            autoDial: false,
-          },
-        },
-      })
-      setIpfs(node)
+        })
+        // @ts-ignore
+        window.ipfs = node
 
-      const nodeId = await node.id()
+        // @ts-ignore
+        setIpfs(node)
 
-      const addr = multiaddr(`/dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`)
-      await node.swarm.connect(addr)
+        const nodeId = await node.id()
 
-      // @ts-ignore
-      window.ipfs = node
+        // 👇 fails on first byte:
+        // libp2p:dialer:error dial to /dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS failed +0ms Error: stream ended before 1 bytes became available
+        const addr = multiaddr(`/dns4/my-ipfs-node.fly.dev/tcp/443/wss/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`)
 
-      setId(nodeId)
+        // 👇
+        // const addr = multiaddr(
+          // `/ip4/168.220.93.39/udp/4003/quic/webtransport/certhash/uEiD-3ARyU0rj69dpv3bc7qxe3Df6A3fdanAvgEgJ3nXZpQ/certhash/uEiCPruwEkBZAeoB3nUnclF-7BWxcc3A3HvIuk0y59MZRmg/p2p/12D3KooWPoeXx9R2woU8jonCSHuGok4CFzM3wBKkZXg2ARnFDwnS`,
+        // )
+
+
+
+        await node.swarm.connect(addr)
+
+        setId(nodeId)
+      } catch (e) {
+        console.error('failed to start IPFS', e)
+      }
     }
 
     init()

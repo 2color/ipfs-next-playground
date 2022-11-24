@@ -20,7 +20,7 @@ const Peers: NextPage = () => {
   }, [id, getPeers])
 
   if (peers?.length === 0) {
-    return <>'No peers'</>
+    return <>No peers</>
   }
   return (
     <div className={styles.container}>
